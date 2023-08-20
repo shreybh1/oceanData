@@ -7,6 +7,6 @@
 # Create access file providing your credentials to use earth access 
 	touch .netrc 
 	echo "machine urs.earthdata.nasa.gov" >> .netrc 
-  echo "  login <enter username> "
-  echo "	password <enter password> " 
+  echo "  login enter username " >> .netrc
+  echo "	password enter password " >> .netrc 
 
