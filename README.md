@@ -5,8 +5,8 @@
 	conda install -c anaconda xarray
 
 # Create access file providing your credentials to use earth access 
-	touch .netrc 
-	echo "machine urs.earthdata.nasa.gov" >> .netrc 
-	echo "	login <enter username>" >> .netrc
-	echo "	password <enter password>" >> .netrc 
+	touch ~/.netrc 
+	echo "machine urs.earthdata.nasa.gov" >> ~/.netrc 
+	echo "	login <enter username>" >> ~/.netrc
+	echo "	password <enter password>" >> ~/.netrc 
 
