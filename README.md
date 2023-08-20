@@ -1,8 +1,13 @@
 # Create a new environment package for earthaccess
-- Earth access module for the NASA earth access package  
+## Earth access module for the NASA earth access package  
 	conda install -c conda-forge earthaccess
-- xarray package for data analysis
+## xarray package for data analysis
 	conda install -c anaconda xarray
+## open blas package may be required for MAC users 
+	conda install openblas 
+## h5netcdf for xarray 
+	conda install -c conda-forge h5netcdf
+	conda install dask 
 
 # Create access file providing your credentials to use earth access 
 	touch ~/.netrc 

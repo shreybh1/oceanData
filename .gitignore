@@ -1,4 +1,8 @@
 *.png 
-*.tiff 
+*.pptx 
+*.tif
 *.netrc 
-*.ipynb 
+*.ipynb_checkpoints*
+__pycache__/
+data-on-s3/
+*.py[cod]

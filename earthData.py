@@ -46,9 +46,11 @@ fileset = earthaccess.open(granules)
 print(f" Using {type(fileset[0])} filesystem")
 
 ds = xr.open_mfdataset(fileset, chunks={}, engine='h5netcdf')
+# ds = xr.open_mfdataset(fileset, chunks={})
+# 
+# print(ds.sea_surface_temperature.std('Time'))
 
-print(ds)
-
+ds.sea_surface_temperature.plot(figsize=(14,6), x='Longitude', y='Latitude') 
 # ds.SLA.where((ds.SLA>=0) & (ds.SLA < 10)).std('Time').plot(figsize=(14,6), x='Longitude', y='Latitude')
 
 # files = earthaccess.open(results)
