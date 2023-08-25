@@ -8,6 +8,8 @@
 ## h5netcdf for xarray 
 	conda install -c conda-forge h5netcdf
 	conda install dask 
+## plotting using matplotlib
+	conda install matplotlib 
 
 # Create access file providing your credentials to use earth access 
 	touch ~/.netrc 
