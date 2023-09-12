@@ -10,17 +10,17 @@ Function call to retrieve credentials
 """
 auth = earthaccess.login()
 
-"""
-Class to define search parameters for each access search data function. 
-If these parameters are not given, then defaults are set 
-Inputs:
-start date - date to start search in format YYYY-MM-DD
-start time - time to start search in format HH:MM:SS 
-end date - date to finish search in format YYYY-MM-DD
-end time - time to finish search in format HH:MM:SS 
-bounding_box - selection of lat/long in format (lower_left_lon, lower_left_lat , upper_right_lon, upper_right_lat)
-"""
 class search_params:
+    """
+    Class to define search parameters for each access search data function. 
+    If these parameters are not given, then defaults are set 
+    :param: 
+    start date - date to start search in format YYYY-MM-DD
+    start time - time to start search in format HH:MM:SS 
+    end date - date to finish search in format YYYY-MM-DD
+    end time - time to finish search in format HH:MM:SS 
+    bounding_box - selection of lat/long in format (lower_left_lon, lower_left_lat , upper_right_lon, upper_right_lat)
+    """
     # args receives unlimited no. of arguments as an array
     def __init__(self, **kwargs):
 
@@ -30,13 +30,13 @@ class search_params:
             self.start_time = kwargs["start_time"]
             self.end_date = kwargs["end_date"]
             self.end_time = kwargs["end_time"]
-            print(kwargs["bounding_box"])
             self.bounding_box = kwargs["bounding_box"]
         else:
             self.start_date = "2020-01-01" 
             self.start_time = "00:00:00" 
             self.end_date = "2020-01-01" 
             self.end_time = "01:00:00"
+            self.bounding_box = (-45, -45, 45, 45)
 
         print("Start date", self.start_date)
         print("End date", self.end_date)
@@ -45,12 +45,14 @@ class search_params:
         print("Latitude and longitude selection", self.bounding_box)
 
     
-"""
-Function to search earth access data for MODIS satellite data 
-using search params data 
-Returns output results in the form of a URL 
-"""
 def get_data(**kwargs): 
+    """
+    Function to search earth access data for MODIS satellite data 
+    using search params data 
+    Returns output results in the form of a URL 
+    :param kwargs: search parameters that are passed into search_data function such as start date, end date, bounding box etc.
+    :return: results from earth access search API
+    """
 
     granules = [] 
 
@@ -72,10 +74,12 @@ def get_data(**kwargs):
 
     return(granules)
 
-"""
-Function to stream data into xr object using results from earth access search API
-"""
 def stream_data(results):
+    """
+    Function to stream data into xr object using results from earth access search API
+    :param results: results from earth access search API
+    :return: xr object containing dataset
+    """
 
     fileset = earthaccess.open(results)
 
@@ -86,10 +90,12 @@ def stream_data(results):
 
     return(ds)
 
-"""
-Plot sea surface temperature on contour plot 
-"""
 def plot_sst(ds):
+    """
+    Plot sea surface temperature on contour plot 
+    :param ds object containing xr dataset
+    :return: contour plot of sea surface temperature
+    """
 
     plt.figure(figsize=(15,7))
 
@@ -109,27 +115,26 @@ def plot_sst(ds):
 
 def sea_surface_temperature(**kwargs):
 
-    """
-    Function to get data from earth access API 
-    """
+    # Function to get data from earth access API 
     result = get_data(**kwargs) 
 
-    """
-    stream data directly into dataset 
-    """
+    # stream data directly into dataset 
     stream = stream_data(result)
 
-    """
-    Plot sea surface temperature     
-    """
+    # Plot sea surface temperature     
     plot_sst(stream)
 
 
 if __name__ == '__main__':
     # by default, the function will use the current date. Iterate backwards by 1 day to get previous day's data. 
-    start_date_ = dt.date.today() - dt.timedelta(days = 1)
-    end_date_ = dt.date.today()
+    start_date_ = dt.date.today() - dt.timedelta(days = 2)
+    # end_date_ = dt.date.today()
+    end_date_ = dt.date.today() - dt.timedelta(days = 1)
     # obtain current time in format '%Y-%m-%dT%H:%M:%SZ'
-    end_time_ = dt.datetime.now().strftime('%H:%M:%S')
-    start_time_ = "00:00:00"
-    sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
+    # end_time_ = dt.datetime.now().strftime('%H:%M:%S')
+    end_time_ = "12:00:00"
+    # obtain start time 12h before end time
+    # start_time_ = (dt.datetime.now() - dt.timedelta(hours = 12)).strftime('%H:%M:%S')   
+    start_time_ = "10:00:00"
+    # sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
+    sys.exit(sea_surface_temperature()) 
