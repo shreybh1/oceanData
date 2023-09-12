@@ -3,6 +3,7 @@ import xarray as xr
 import sys 
 import numpy as np 
 import matplotlib.pyplot as plt
+import datetime as dt   
 
 """
 Function call to retrieve credentials 
@@ -125,4 +126,10 @@ def sea_surface_temperature(**kwargs):
 
 
 if __name__ == '__main__':
-    sys.exit(sea_surface_temperature(start_date="2020-01-01", start_time="00:00:10", end_date="2020-01-02", end_time="01:00:00",bounding_box=(-45, -45, 45, 45))) 
+    # by default, the function will use the current date. Iterate backwards by 1 day to get previous day's data. 
+    start_date_ = dt.date.today() - dt.timedelta(days = 1)
+    end_date_ = dt.date.today()
+    # obtain current time in format '%Y-%m-%dT%H:%M:%SZ'
+    end_time_ = dt.datetime.now().strftime('%H:%M:%S')
+    start_time_ = "00:00:00"
+    sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
