@@ -64,15 +64,14 @@ def get_data(**kwargs):
         cloud_hosted=True,
         temporal=(f"{earthAccess_data.start_date}T{earthAccess_data.start_time}", f"{earthAccess_data.end_date}T{earthAccess_data.end_time}"), 
         bounding_box = earthAccess_data.bounding_box, 
-        count = 1 
+        # count = 1
     )
 
-    if len(results)>0:
-        granules.append(results[0])
-    
-    print("Total granules:", len(granules))
-
-    return(granules)
+    if(len(results) == 0):
+        print("No results found")
+        sys.exit(0)
+        
+    return(results)
 
 def stream_data(results):
     """
@@ -104,37 +103,39 @@ def plot_sst(ds):
     x = ds['lon']  
 
     # Contour plot 
-    contourplot = plt.contourf( x,y,z,levels=50)
+    contourplot = plt.contourf( x,y,z,levels=100)
     cbar = plt.colorbar(contourplot)
 
     # Annotate plot 
     plt.ylabel('Latitude')
     plt.xlabel('Longitude')
     plt.title('Sea surface temperature %s' %ds.time_coverage_start)
-    plt.show() 
+    # plt.show() 
+    plt.savefig(f'Sea surface temperature {ds.time_coverage_start}') 
 
 def sea_surface_temperature(**kwargs):
 
     # Function to get data from earth access API 
-    result = get_data(**kwargs) 
+    result_dict = get_data(**kwargs) 
 
-    # stream data directly into dataset 
-    stream = stream_data(result)
+    for x in result_dict:
+        result = []  
+        result.append(x)
 
-    # Plot sea surface temperature     
-    plot_sst(stream)
+        # stream data directly into dataset 
+        stream = stream_data(result)
 
+        # Plot sea surface temperature     
+        plot_sst(stream)
 
 if __name__ == '__main__':
     # by default, the function will use the current date. Iterate backwards by 1 day to get previous day's data. 
-    start_date_ = dt.date.today() - dt.timedelta(days = 2)
-    # end_date_ = dt.date.today()
-    end_date_ = dt.date.today() - dt.timedelta(days = 1)
+    # start_date_ = dt.date.today() - dt.timedelta(days = 1)
+    start_date_ = dt.date.today() 
+    end_date_ = dt.date.today()
     # obtain current time in format '%Y-%m-%dT%H:%M:%SZ'
-    # end_time_ = dt.datetime.now().strftime('%H:%M:%S')
-    end_time_ = "12:00:00"
+    end_time_ = dt.datetime.now().strftime('%H:%M:%S')
     # obtain start time 12h before end time
-    # start_time_ = (dt.datetime.now() - dt.timedelta(hours = 12)).strftime('%H:%M:%S')   
-    start_time_ = "10:00:00"
-    # sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
-    sys.exit(sea_surface_temperature()) 
+    start_time_ = (dt.datetime.now() - dt.timedelta(hours = 4)).strftime('%H:%M:%S')   
+    sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
+    # sys.exit(sea_surface_temperature()) 
