@@ -206,7 +206,7 @@ def sea_surface_temperature(**kwargs):
             stream = xr.open_dataset(f'local_folder/{file}') 
 
     elif(METHOD == 'STREAM'):
-        stream data directly into dataset 
+        # stream data directly into dataset 
         stream = stream_data(result)
 
     data_cleaned = data_cleanup(stream) 
