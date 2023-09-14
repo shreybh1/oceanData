@@ -5,6 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime as dt   
 import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+import numpy.ma as ma
+
 
 METHOD='LOCAL'
 """
@@ -91,29 +94,6 @@ def stream_data(results):
 
     return(ds)
 
-def plot_sst(ds):
-    """
-    Plot sea surface temperature on contour plot 
-    :param ds object containing xr dataset
-    :return: contour plot of sea surface temperature
-    """
-
-    plt.figure(figsize=(15,7))
-
-    z = ds['sea_surface_temperature'][0] 
-    y = ds['lat'] 
-    x = ds['lon'] 
-
-    # Contour plot 
-    contourplot = plt.contourf( x,y,z,levels=100)
-    cbar = plt.colorbar(contourplot)
-
-    # Annotate plot 
-    plt.ylabel('Latitude')
-    plt.xlabel('Longitude')
-    plt.title('Sea surface temperature %s' %ds.time_coverage_start)
-    # plt.show() 
-    plt.savefig(f'Sea surface temperature {ds.time_coverage_start}') 
 
 def plotGlobalMap(ds):
 
@@ -125,6 +105,95 @@ def plotGlobalMap(ds):
     )
     ax.coastlines()
 
+def data_cleanup(ds): 
+    # np arrays 
+    lat = np.array(ds.lat) 
+    lon = np.array(ds.lon) 
+    sst = np.array(ds.sea_surface_temperature[0]) 
+
+    # Remove rows with Nan values.
+
+    # Use np.isnan() to create a mask for rows containing NaN values for latitude 
+    nan_lat_mask = np.any(np.isnan(lat), axis=1)
+
+    # Use np.isnan() to create a mask for rows containing NaN values for longitude
+    nan_lon_mask = np.any(np.isnan(lon), axis=1)
+
+    # Obtain the combination of these masks to exclude Nan values for both longitude and latitude 
+    combined_mask = np.logical_and(nan_lat_mask, nan_lon_mask)
+
+    # Use boolean indexing to exclude rows with NaN values for all arrays 
+    lon_cleaned = lon[~combined_mask]
+    lat_cleaned = lat[~combined_mask]
+    sst_cleaned = sst[~combined_mask] 
+
+    # assign cleaned data to new dataset
+    ds_cleaned = {} 
+    ds_cleaned['lon_cleaned'] = lon_cleaned
+    ds_cleaned['lat_cleaned'] = lat_cleaned
+    ds_cleaned['sst_cleaned'] = sst_cleaned
+    ds_cleaned['time_coverage_start'] = ds.time_coverage_start
+    
+
+    return(ds_cleaned)
+
+
+def plot_sst_coordinates(ds):
+    """
+    Plot sea surface temperature on contour plot 
+    :param ds object containing xr dataset
+    :return: contour plot of sea surface temperature
+    """
+
+    # initialise figure 
+    fig, ax = plt.subplots(figsize=(15,10))
+
+    # Contour plot with cleaned data 
+    contour = plt.contourf(ds['lon_cleaned'], ds['lat_cleaned'], ds['sst_cleaned']) 
+
+    # Add colorbar
+    cbar = plt.colorbar(contour, ax=ax, orientation='horizontal')
+    cbar.set_label("Sea surface temperature (K)")
+
+    # Annotate plot 
+    plt.ylabel('Latitude')
+    plt.xlabel('Longitude')
+    plt.title('Sea surface temperature %s' %ds['time_coverage_start'])
+    
+    # plt.savefig(f'Sea surface temperature {ds.time_coverage_start}') 
+    plt.show()
+
+
+def plot_sst_global(ds):
+    # plot map of the world using cartopy 
+    # import matplotlib.pyplot as plt
+    # import numpy as np
+    # import cartopy.crs as ccrs
+
+    # Create a map using PlateCarree projection
+    fig, ax = plt.subplots(figsize=(20,14), subplot_kw={"projection": ccrs.PlateCarree()})
+    ax.set_global()
+
+    # Add coastline and country borders for context
+    ax.add_feature(cfeature.COASTLINE)
+    ax.add_feature(cfeature.BORDERS, linestyle=':')
+    ax.add_feature(cfeature.LAND, color='lightgray')
+    ax.add_feature(cfeature.OCEAN, color='lightblue')
+
+    # Create a filled contour plot
+    contour = ax.contourf(ds['lon_cleaned'], ds['lat_cleaned'], ds['sst_cleaned'], levels=20, cmap='viridis')
+
+    # Add colorbar
+    cbar = plt.colorbar(contour, ax=ax, orientation='horizontal')
+    cbar.set_label("Sea surface temperature (K)")
+
+    # Set a title
+    plt.title("SST Plot on a Map of the World")
+
+    fig.tight_layout() 
+    # Show the plot
+    plt.show()
+
 def sea_surface_temperature(**kwargs):
 
     # Function to get data from earth access API 
@@ -133,12 +202,18 @@ def sea_surface_temperature(**kwargs):
     if(METHOD == 'LOCAL'):
         # download data to local folder
         files = earthaccess.download(result, "local_folder")
-        stream = xr.open_dataset(files) 
+        for file in files: 
+            stream = xr.open_dataset(f'local_folder/{file}') 
+
     elif(METHOD == 'STREAM'):
-        # stream data directly into dataset 
+        stream data directly into dataset 
         stream = stream_data(result)
 
-    stream.sea_surface_temperature[0].plot() # lat and lon are coordinates but they do not function well for current data 
+    data_cleaned = data_cleanup(stream) 
+
+    # plot_sst_coordinates(data_cleaned) 
+
+    plot_sst_global(data_cleaned)
 
 
 if __name__ == '__main__':
@@ -150,5 +225,5 @@ if __name__ == '__main__':
     end_time_ = dt.datetime.now().strftime('%H:%M:%S')
     # obtain start time 12h before end time
     start_time_ = (dt.datetime.now() - dt.timedelta(hours = 4)).strftime('%H:%M:%S')   
-    # sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
-    sys.exit(sea_surface_temperature()) 
+    sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
+    # sys.exit(sea_surface_temperature()) 
