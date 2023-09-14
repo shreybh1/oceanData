@@ -18,16 +18,22 @@ auth = earthaccess.login()
 class search_params:
     """
     Class to define search parameters for each access search data function. 
-    If these parameters are not given, then defaults are set 
-    :param: 
-    start date - date to start search in format YYYY-MM-DD
-    start time - time to start search in format HH:MM:SS 
-    end date - date to finish search in format YYYY-MM-DD
-    end time - time to finish search in format HH:MM:SS 
-    bounding_box - selection of lat/long in format (lower_left_lon, lower_left_lat , upper_right_lon, upper_right_lat)
     """
     # args receives unlimited no. of arguments as an array
     def __init__(self, **kwargs):
+        """
+        Initialisation function to set search parameters, and if these are not given then default values are used.
+
+        Args: 
+            start_date (str): date to start search in format YYYY-MM-DD
+            start_time (str): time to start search in format HH:MM:SS 
+            end_date (str): date to finish search in format YYYY-MM-DD
+            end_time (str): time to finish search in format HH:MM:SS 
+            bounding_box (array): selection of lat/long in format (lower_left_lon, lower_left_lat , upper_right_lon, upper_right_lat)
+
+        Returns:
+            search_params object containing search parameters 
+        """
 
         # access args index values, otherwise set default values as example 
         if(kwargs): 
@@ -52,14 +58,14 @@ class search_params:
     
 def get_data(**kwargs): 
     """
-    Function to search earth access data for MODIS satellite data 
-    using search params data 
-    Returns output results in the form of a URL 
-    :param kwargs: search parameters that are passed into search_data function such as start date, end date, bounding box etc.
-    :return: results from earth access search API
-    """
+    Function to search earth access data for MODIS satellite data using search params data 
 
-    granules = [] 
+    Args: 
+        kwargs: search parameters that are passed into search_data function such as start date, end date, bounding box etc. 
+    
+    Returns:
+        results(URL) : results from earth access search API
+    """
 
     # set default times if not already specified.
     earthAccess_data = search_params(**kwargs)
@@ -81,8 +87,12 @@ def get_data(**kwargs):
 def stream_data(results):
     """
     Function to stream data into xr object using results from earth access search API
-    :param results: results from earth access search API
-    :return: xr object containing dataset
+
+    Args:
+        results(URLs): results from earth access search API
+
+    Returns:
+        ds(xr object): xr object containing dataset
     """
 
     fileset = earthaccess.open(results)
@@ -95,17 +105,16 @@ def stream_data(results):
     return(ds)
 
 
-def plotGlobalMap(ds):
-
-    plt.figure(figsize=(20,24))
-    ax = plt.axes(projection=ccrs.PlateCarree())
-    ax.set_global()
-    ds.sea_surface_temperature[0].plot.pcolormesh(
-        ax=ax, transform=ccrs.PlateCarree(), y="lat", x="lon", add_colorbar=False
-    )
-    ax.coastlines()
-
 def data_cleanup(ds): 
+    """
+    Function to clean up data by removing NaN values from dataset
+
+    Args:
+        ds(xr object): xr object containing dataset
+    
+    Returns:
+        ds_cleaned(xr object): xr object containing cleaned dataset
+    """
     # np arrays 
     lat = np.array(ds.lat) 
     lon = np.array(ds.lon) 
@@ -133,7 +142,6 @@ def data_cleanup(ds):
     ds_cleaned['lat_cleaned'] = lat_cleaned
     ds_cleaned['sst_cleaned'] = sst_cleaned
     ds_cleaned['time_coverage_start'] = ds.time_coverage_start
-    
 
     return(ds_cleaned)
 
@@ -141,8 +149,12 @@ def data_cleanup(ds):
 def plot_sst_coordinates(ds):
     """
     Plot sea surface temperature on contour plot 
-    :param ds object containing xr dataset
-    :return: contour plot of sea surface temperature
+
+    Args:
+        ds(xr object): xr object containing dataset
+
+    Returns:
+        contour plot of sea surface temperature
     """
 
     # initialise figure 
@@ -165,10 +177,15 @@ def plot_sst_coordinates(ds):
 
 
 def plot_sst_global(ds):
-    # plot map of the world using cartopy 
-    # import matplotlib.pyplot as plt
-    # import numpy as np
-    # import cartopy.crs as ccrs
+    """
+    Plot sea surface temperature on contour plot on map of the world 
+
+    Args:
+        ds(xr object): xr object containing dataset
+
+    Returns:
+        contour plot of sea surface temperature on map of the world 
+    """
 
     # Create a map using PlateCarree projection
     fig, ax = plt.subplots(figsize=(20,14), subplot_kw={"projection": ccrs.PlateCarree()})
@@ -195,6 +212,15 @@ def plot_sst_global(ds):
     plt.show()
 
 def sea_surface_temperature(**kwargs):
+    """
+    Main function that calls all other functions to retrieve and plot sea surface temperature data
+
+    Args:
+        kwargs: search parameters that are passed into search_data function such as start date, end date, bounding box etc.
+
+    Returns:
+        plots of sea surface temperature data
+    """
 
     # Function to get data from earth access API 
     result = get_data(**kwargs) 
@@ -211,7 +237,7 @@ def sea_surface_temperature(**kwargs):
 
     data_cleaned = data_cleanup(stream) 
 
-    # plot_sst_coordinates(data_cleaned) 
+    plot_sst_coordinates(data_cleaned) 
 
     plot_sst_global(data_cleaned)
 
