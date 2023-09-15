@@ -1,3 +1,4 @@
+conda create -n oceanData
 conda install -c conda-forge earthaccess
 conda install -c anaconda xarray
 conda install openblas 
