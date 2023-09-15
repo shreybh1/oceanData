@@ -2,11 +2,8 @@ import earthaccess
 import xarray as xr
 import sys 
 import numpy as np 
-import matplotlib.pyplot as plt
-import datetime as dt   
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 import numpy.ma as ma
+
 
 METHOD='LOCAL'
 """
@@ -91,6 +88,7 @@ def get_data(**kwargs):
         
     return(results)
 
+
 def stream_data(results):
     """
     Function to stream data into xr object using results from earth access search API
@@ -151,115 +149,3 @@ def data_cleanup(ds):
     ds_cleaned['time_coverage_start'] = ds.time_coverage_start
 
     return(ds_cleaned)
-
-
-def plot_sst_coordinates(ds):
-    """
-    Plot sea surface temperature on contour plot 
-
-    Args:
-        ds(xr object): xr object containing dataset
-
-    Returns:
-        contour plot of sea surface temperature
-    """
-
-    # initialise figure 
-    fig, ax = plt.subplots(figsize=(15,10))
-
-    # Contour plot with cleaned data 
-    contour = plt.contourf(ds['lon_cleaned'], ds['lat_cleaned'], ds['sst_cleaned']) 
-
-    # Add colorbar
-    cbar = plt.colorbar(contour, ax=ax, orientation='horizontal')
-    cbar.set_label("Sea surface temperature (K)")
-
-    # Annotate plot 
-    plt.ylabel('Latitude')
-    plt.xlabel('Longitude')
-    plt.title('Sea surface temperature %s' %ds['time_coverage_start'])
-
-    # Save plot    
-    plt.savefig(f'Sea surface temperature {ds["time_coverage_start"]}') 
-    # plt.show()
-
-
-def plot_sst_global(ds):
-    """
-    Plot sea surface temperature on contour plot on map of the world 
-
-    Args:
-        ds(xr object): xr object containing dataset
-
-    Returns:
-        contour plot of sea surface temperature on map of the world 
-    """
-
-    # Create a map using PlateCarree projection
-    fig, ax = plt.subplots(figsize=(20,14), subplot_kw={"projection": ccrs.PlateCarree()})
-    ax.set_global()
-
-    # Add coastline and country borders for context
-    ax.add_feature(cfeature.COASTLINE)
-    ax.add_feature(cfeature.BORDERS, linestyle=':')
-    ax.add_feature(cfeature.LAND, color='lightgray')
-    ax.add_feature(cfeature.OCEAN, color='lightblue')
-
-    # Create a filled contour plot
-    contour = ax.contourf(ds['lon_cleaned'], ds['lat_cleaned'], ds['sst_cleaned'], levels=20, cmap='viridis')
-
-    # Add colorbar
-    cbar = plt.colorbar(contour, ax=ax, orientation='horizontal')
-    cbar.set_label("Sea surface temperature (K)")
-
-    # Set a title
-    plt.title("SST Plot on a Map of the World")
-
-    fig.tight_layout() 
-    # Save plot    
-    plt.savefig(f'Sea surface temperature global {ds["time_coverage_start"]}') 
-    # Show the plot
-    # plt.show()
-
-def sea_surface_temperature(**kwargs):
-    """
-    Main function that calls all other functions to retrieve and plot sea surface temperature data
-
-    Args:
-        kwargs: search parameters that are passed into search_data function such as start date, end date, bounding box etc.
-
-    Returns:
-        plots of sea surface temperature data
-    """
-
-    # Function to get data from earth access API 
-    result = get_data(**kwargs) 
-
-    if(METHOD == 'LOCAL'):
-        # download data to local folder
-        files = earthaccess.download(result, "local_folder")
-        for file in files: 
-            stream = xr.open_dataset(f'local_folder/{file}') 
-
-    elif(METHOD == 'STREAM'):
-        # stream data directly into dataset 
-        stream = stream_data(result)
-
-    data_cleaned = data_cleanup(stream) 
-
-    plot_sst_coordinates(data_cleaned) 
-
-    plot_sst_global(data_cleaned)
-
-
-if __name__ == '__main__':
-    # by default, the function will use the current date. Iterate backwards by 1 day to get previous day's data. 
-    start_date_ = dt.date.today() - dt.timedelta(days = 1)
-    # start_date_ = dt.date.today() 
-    end_date_ = dt.date.today()
-    # obtain current time in format '%Y-%m-%dT%H:%M:%SZ'
-    end_time_ = dt.datetime.now().strftime('%H:%M:%S')
-    # obtain start time 12h before end time
-    start_time_ = (dt.datetime.now() - dt.timedelta(hours = 4)).strftime('%H:%M:%S')   
-    sys.exit(sea_surface_temperature(start_date=f"{start_date_}", start_time=start_time_, end_date=f"{end_date_}", end_time=f"{end_time_}",bounding_box=(-45, -45, 45, 45))) 
-    # sys.exit(sea_surface_temperature()) 
