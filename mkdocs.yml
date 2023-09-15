@@ -1,0 +1,12 @@
+site_name: oceanData 
+site_url: https://github.com/sb15895/oceanData
+
+theme:
+ name: "material"
+
+plugins:
+ - mkdocstrings
+
+nav:
+ - Reference: ref.md 
+ - Tutorial: tutorial.md  
