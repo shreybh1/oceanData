@@ -10,7 +10,8 @@
 	conda install dask 
 ## plotting using matplotlib
 	conda install matplotlib 
-
+## job scheduling using apscheduler 
+	conda install -c anaconda apscheduler 
 # Create access file providing your credentials to use earth access 
 	touch ~/.netrc 
 	echo "machine urs.earthdata.nasa.gov" >> ~/.netrc 
