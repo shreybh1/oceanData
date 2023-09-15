@@ -25,7 +25,12 @@ conda install matplotlib
 # job scheduling using apscheduler 
 conda install -c anaconda apscheduler 
 ```
-Alternatively, [buildenv.sh](buildenv.sh) can be used to build the conda environment to run the scripts. 
+Alternatively, [env.yml](env.yml) can be used to build the conda environment to
+run the scripts using the following command. 
+
+```
+conda env create -f env.yml 
+```
 
 ## Create access file providing your credentials to use earth access 
 Access token can be created using earthdata website using this [link](https://www.earthdata.nasa.gov/learn/use-data).  
