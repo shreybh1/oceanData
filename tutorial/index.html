@@ -8,6 +8,10 @@
       
       
       
+        <link rel="canonical" href="https://github.com/sb15895/oceanData/tutorial/">
+      
+      
+        <link rel="prev" href="../ref/">
       
       
       
@@ -16,7 +20,7 @@
     
     
       
-        <title>Welcome to MkDocs - oceanData</title>
+        <title>Tutorial - oceanData</title>
       
     
     
@@ -62,11 +66,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#welcome-to-mkdocs" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -99,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to MkDocs
+              Tutorial
             
           </span>
         </div>
@@ -151,15 +150,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+      <a href="../ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    How-To Guides
+    Reference
   </span>
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+      
     </li>
   
 
@@ -181,30 +207,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -219,20 +221,17 @@
                   
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+  <h1>Tutorial</h1>
+
+<p>oceanData.py creates a scheduler to run the script for an interval of 4 hours. 
+This saves the two type of maps, global and coordinate based locally. </p>
+<pre><code>    python3 oceanData.py 
+</code></pre>
+<p>For a simple plot, sst function can be called. </p>
+<pre><code>    sst() # default times and dates 
+    sst(start_date=f&quot;{start_date_}&quot;, start_time=start_time_,
+    end_date=f&quot;{end_date_}&quot;, end_time=f&quot;{end_time_}&quot;,bounding_box=(-45, -45, 45,
+    45)) # sst function with given options 
 </code></pre>
 
 
