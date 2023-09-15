@@ -1,5 +1,6 @@
 from createplots import *
-from datacollect import *   
+from datacollect import *
+
 
 def sst(**kwargs):
     """
@@ -12,21 +13,21 @@ def sst(**kwargs):
         plots of sea surface temperature data
     """
 
-    # Function to get data from earth access API 
-    result = get_data(**kwargs) 
+    # Function to get data from earth access API
+    result = get_data(**kwargs)
 
-    if(METHOD == 'LOCAL'):
+    if METHOD == "LOCAL":
         # download data to local folder
         files = earthaccess.download(result, "local_folder")
-        for file in files: 
-            stream = xr.open_dataset(f'local_folder/{file}') 
+        for file in files:
+            stream = xr.open_dataset(f"local_folder/{file}")
 
-    elif(METHOD == 'STREAM'):
-        # stream data directly into dataset 
+    elif METHOD == "STREAM":
+        # stream data directly into dataset
         stream = stream_data(result)
 
-    data_cleaned = data_cleanup(stream) 
+    data_cleaned = data_cleanup(stream)
 
-    plot_sst_coordinates(data_cleaned) 
+    plot_sst_coordinates(data_cleaned)
 
     plot_sst_global(data_cleaned)
