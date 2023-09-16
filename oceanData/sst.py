@@ -1,7 +1,8 @@
 import earthaccess
 from oceanData import *
 import xarray as xr
-import os 
+import os
+
 
 def sst(**kwargs):
     """
@@ -23,8 +24,9 @@ def sst(**kwargs):
         STREAM: stream data directly into dataset
     """
 
-    auth = earthaccess.login() # Function call to retrieve credentials using the .netrc file 
-
+    auth = (
+        earthaccess.login()
+    )  # Function call to retrieve credentials using the .netrc file
 
     # Function to get data from earth access API
     result = get_data(**kwargs)
@@ -33,23 +35,23 @@ def sst(**kwargs):
         # download data to local folder
         files = earthaccess.download(result, "local_folder")
         for file in files:
-            # test for file 
+            # test for file
             assert os.path.isfile(f"local_folder/{file}") == True
-            # open file using xarray 
+            # open file using xarray
             stream = xr.open_dataset(f"local_folder/{file}")
             # test for stream
-            assert stream!=None
+            assert stream != None
 
     elif METHOD == "STREAM":
         # stream data directly into dataset
         stream = stream_data(result)
-        assert stream!=None
+        assert stream != None
 
     data_cleaned = data_cleanup(stream)
 
-    # make directory plots if not already created 
-    if not os.path.exists('Plots'):
-        os.makedirs('Plots')
+    # make directory plots if not already created
+    if not os.path.exists("Plots"):
+        os.makedirs("Plots")
 
     plot_sst_coordinates(data_cleaned)
 

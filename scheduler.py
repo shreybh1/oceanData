@@ -1,7 +1,7 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import sys
 import datetime as dt
-from oceanData import * 
+from oceanData import *
 
 
 def plot_maps():
@@ -32,13 +32,12 @@ if __name__ == "__main__":
         Test plot maps function if argument "test" is passed
         """
         print("Running one instance of plot_maps")
-        plot_maps() 
+        plot_maps()
 
-    else: 
+    else:
         """
-        Main function that calls plot_maps function for interval of 4 hours
+        Main function that calls plot_maps function for interval of 1 hour
         """
         scheduler = BlockingScheduler()
-        scheduler.add_job(plot_maps, "interval", minutes=5)
+        scheduler.add_job(plot_maps, "interval", hours=1)
         scheduler.start()
-

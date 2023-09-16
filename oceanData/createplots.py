@@ -34,7 +34,7 @@ def plot_sst_coordinates(ds):
     plt.xlabel("Longitude")
     plt.title("Sea surface temperature %s" % ds["time_coverage_start"])
 
-    fig.tight_layout() 
+    fig.tight_layout()
     plt.savefig(f'Plots/Sea_surface_temperature_{ds["time_coverage_start"]}')
     # plt.show()
 

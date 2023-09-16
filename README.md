@@ -1,7 +1,8 @@
 oceanData
 ---------
-oceanData repository searches the MODIS satellite data to obtain sea surface temperature using user specified search parameters which calls the NASA earthaccess package. 
-It uses a scheduler to obtain the plots for specified intervals. 
+The oceanData module searches the MODIS satellite data to obtain sea surface temperature using user specified search parameters which calls the NASA earthaccess package. 
+The py files are in [oceanData](oceanData) folder. 
+The repository uses a [scheduler](scheduler.py) to obtain the plots for specified intervals. 
 
 ## Create a new environment package for earthaccess
 The scripts need conda environments to run the pachages.
@@ -51,7 +52,11 @@ mkdocs serve
 ```
 
 ## Quick start
-[oceanData.py](oceanData.py) is the main file containing the scheduler which then calls the [sst](sst.py) function
+[oceanData.py](oceanData.py) is the main file containing the scheduler which then calls the [sst](sst.py) function for default interval of 1 hour. 
 ```
-python3 oceanData.py 
+python3 scheduler.py  
+```
+A test flag can be added which calls the [sst](sst.py) once, to verify if the plot function is working as expected. 
+```
+python3 scheduler.py test 
 ```
