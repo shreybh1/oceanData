@@ -223,11 +223,18 @@
 
   <h1>Tutorial</h1>
 
-<p>oceanData.py creates a scheduler to run the script for an interval of 4 hours. 
-This saves the two type of maps, global and coordinate based locally. </p>
-<pre><code>    python3 oceanData.py 
+<p>scheduler.py creates a scheduler to run the script for an interval of 4 hours by
+default. 
+This saves the two type of maps, global and coordinate based locally in Plots/
+folder. </p>
+<pre><code>    python3 scheduler.py 
 </code></pre>
-<p>For a simple plot, sst function can be called. </p>
+<p>If a test is required for the job, then the test flag can be added which calls
+the sst function. </p>
+<pre><code>    python3 scheduler.py test 
+</code></pre>
+<p>For a simple plot, sst function can be called after importing the oceanData
+module. </p>
 <pre><code>    sst() # default times and dates 
     sst(start_date=f&quot;{start_date_}&quot;, start_time=start_time_,
     end_date=f&quot;{end_date_}&quot;, end_time=f&quot;{end_time_}&quot;,bounding_box=(-45, -45, 45,
