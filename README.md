@@ -5,7 +5,7 @@ The py files are in [oceanData](oceanData) folder.
 The repository uses a [scheduler](scheduler.py) to obtain the plots for specified intervals. 
 
 ## Create a new environment package for earthaccess
-The scripts need conda environments to run the pachages.
+The scripts need conda environments to run the packages.
 ```
 # Earth access module for the NASA earth access package  
 conda install -c conda-forge earthaccess
