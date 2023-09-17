@@ -52,7 +52,7 @@ mkdocs serve
 ```
 
 ## Quick start
-[oceanData.py](oceanData.py) is the main file containing the scheduler which then calls the [sst](sst.py) function for default interval of 1 hour. 
+[scheduler.py](scheduler.py) is the main file containing the scheduler which then calls the [sst](sst.py) function for default interval of 1 hour. 
 ```
 python3 scheduler.py  
 ```
