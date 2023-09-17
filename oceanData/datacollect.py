@@ -3,6 +3,10 @@ import xarray as xr
 import sys
 import numpy as np
 import numpy.ma as ma
+import os
+import requests 
+from requests.auth import HTTPBasicAuth
+from urllib.request import urlretrieve
 
 
 class search_params:
@@ -139,3 +143,43 @@ def data_cleanup(ds):
     ds_cleaned["time_coverage_start"] = ds.time_coverage_start
 
     return ds_cleaned
+
+def download_data(result): 
+    """
+    Function to download URL data to the local folder and open the file using an xr object using results from earth access search API
+
+    Args:
+        results(List): results from earth access search API
+
+    Returns:
+        ds(xr object): xr object containing dataset
+    """
+
+    # download data to local folder
+    # files = earthaccess.download(result, "local_folder")
+    output = f"{os.getcwd()}/local_folder"
+
+
+
+    # for each element in result, download the file and open using xarray  
+    for x in result:
+        str_result = str(x)
+        # get Data url from list
+        url = str_result.split("Data: ")[1][2:-2]
+
+        # get filename from url 
+        filename = f"{output}/{url.split('/')[-1]}" 
+        print("Saving under ", filename)
+        
+        if(os.path.isfile(filename)!=True):
+            res=requests.get(url , auth=HTTPBasicAuth(user, password))
+            open(filename, 'wb').write(res.content)
+
+        # test for file
+        assert os.path.isfile(filename) == True
+        # open file using xarray
+        stream = xr.open_dataset(filename)
+        # test for stream
+        assert stream != None
+
+    return(stream) 

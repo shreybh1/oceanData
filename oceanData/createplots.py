@@ -1,9 +1,11 @@
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
+import numpy.ma as ma
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-import numpy.ma as ma
+import os 
+import cartopy 
 
 plt.switch_backend("Agg")  # To avoid matplotlib error
 
@@ -49,6 +51,9 @@ def plot_sst_global(ds):
     Returns:
         contour plot of sea surface temperature on map of the world
     """
+    
+    # get cartopy to source data from offline sources 
+    cartopy.config['data_dir'] = os.getenv('CARTOPY_DIR', cartopy.config.get('data_dir'))
 
     # Create a map using PlateCarree projection
     fig, ax = plt.subplots(

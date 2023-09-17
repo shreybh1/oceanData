@@ -1,8 +1,6 @@
 import earthaccess
+import os 
 from oceanData import *
-import xarray as xr
-import os
-
 
 def sst(**kwargs):
     """
@@ -32,15 +30,8 @@ def sst(**kwargs):
     result = get_data(**kwargs)
 
     if METHOD == "LOCAL":
-        # download data to local folder
-        files = earthaccess.download(result, "local_folder")
-        for file in files:
-            # test for file
-            assert os.path.isfile(f"local_folder/{file}") == True
-            # open file using xarray
-            stream = xr.open_dataset(f"local_folder/{file}")
-            # test for stream
-            assert stream != None
+        # download data into the local directory 
+        stream = download_data(result)
 
     elif METHOD == "STREAM":
         # stream data directly into dataset
