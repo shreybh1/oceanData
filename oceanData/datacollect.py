@@ -158,8 +158,11 @@ def download_data(result):
     # download data to local folder
     # files = earthaccess.download(result, "local_folder")
     output = f"{os.getcwd()}/local_folder"
-
-
+    
+    # get authorisation details from .netrc file 
+    import netrc
+    secrets = netrc.netrc()
+    username, account, password = secrets.authenticators("urs.earthdata.nasa.gov")
 
     # for each element in result, download the file and open using xarray  
     for x in result:
@@ -169,11 +172,13 @@ def download_data(result):
 
         # get filename from url 
         filename = f"{output}/{url.split('/')[-1]}" 
-        print("Saving under ", filename)
         
         if(os.path.isfile(filename)!=True):
-            res=requests.get(url , auth=HTTPBasicAuth(user, password))
-            open(filename, 'wb').write(res.content)
+            print("Saving under ", filename)
+            # res=requests.get(url , auth=HTTPBasicAuth(username, password))
+            # open(filename, 'wb').write(res.content)
+            # call wget on bash using python 
+            os.system("wget " + "-P data/" + " --user=" + username + " --password=" + password + " "+ url )
 
         # test for file
         assert os.path.isfile(filename) == True
