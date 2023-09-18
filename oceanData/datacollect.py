@@ -176,12 +176,13 @@ def download_data(result):
         # get filename from url 
         output = f"{os.getcwd()}/local_folder" 
         filename = f"{output}/{url.split('/')[-1]}" 
-        print('Filename = '+ filename) 
 
         # check if file already exists         
         if(os.path.isfile(filename)!=True):
             # call wget on bash using python 
             os.system("wget " + f"-P {output}/" + " --user=" + username + " --password=" + password + " "+ url )
+        else:
+            print('Filename '+ filename + ' already exists') 
 
         # test for file
         assert os.path.isfile(filename) == True
