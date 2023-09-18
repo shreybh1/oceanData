@@ -16,7 +16,7 @@ def plot_maps():
     # obtain current time in format '%Y-%m-%dT%H:%M:%SZ'
     end_time_ = dt.datetime.now().strftime("%H:%M:%S")
     # obtain start time 12h before end time
-    start_time_ = (dt.datetime.now() - dt.timedelta(hours=4)).strftime("%H:%M:%S")
+    start_time_ = (dt.datetime.now() - dt.timedelta(hours=12)).strftime("%H:%M:%S")
     sst(
         start_date=f"{start_date_}",
         start_time=start_time_,
