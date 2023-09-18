@@ -25,6 +25,7 @@ class search_params:
             end_date (str): date to finish search in format YYYY-MM-DD
             end_time (str): time to finish search in format HH:MM:SS
             bounding_box (array): selection of lat/long in format (lower_left_lon, lower_left_lat , upper_right_lon, upper_right_lat)
+            plot_type (string):  type of plot to be created, either local or global
 
         Returns:
             search_params object containing search parameters
@@ -37,12 +38,14 @@ class search_params:
             self.end_date = kwargs["end_date"]
             self.end_time = kwargs["end_time"]
             self.bounding_box = kwargs["bounding_box"]
+            self.plot_type = kwargs["plot_type"]
         else:
             self.start_date = "2020-01-01"
             self.start_time = "00:00:00"
             self.end_date = "2020-01-01"
             self.end_time = "01:00:00"
             self.bounding_box = (-45, -45, 45, 45)
+            self.plot_type = "local"
 
         print("Start date", self.start_date)
         print("End date", self.end_date)
@@ -174,14 +177,12 @@ def download_data(result):
         output = f"{os.getcwd()}/local_folder" 
         filename = f"{output}/{url.split('/')[-1]}" 
         print('Filename = '+ filename) 
-        
+
+        # check if file already exists         
         if(os.path.isfile(filename)!=True):
-            print("Saving under ", filename)
-            # res=requests.get(url , auth=HTTPBasicAuth(username, password))
-            # open(filename, 'wb').write(res.content)
             # call wget on bash using python 
-            os.system("wget " + "-P {output}/" + " --user=" + username + " --password=" + password + " "+ url )
-            # download data to local folder
+            os.system("wget " + f"-P {output}/" + " --user=" + username + " --password=" + password + " "+ url )
+
         # test for file
         assert os.path.isfile(filename) == True
         # open file using xarray

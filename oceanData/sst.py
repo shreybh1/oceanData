@@ -44,6 +44,9 @@ def sst(**kwargs):
     if not os.path.exists("Plots"):
         os.makedirs("Plots")
 
-    plot_sst_coordinates(data_cleaned)
-
-    plot_sst_global(data_cleaned)
+    if kwargs["plot_type"] == "global" or kwargs["plot_type"] == "Global" or kwargs["plot_type"] == "GLOBAL" or kwargs["plot_type"] == "g" or kwargs["plot_type"] == "G":
+    # if plot type argument global is passed, plot sea surface temperature on global coordinates
+        plot_sst_global(data_cleaned)
+    else: 
+    # if plot type argument local is passed, plot sea surface temperature on local coordinates
+        plot_sst_coordinates(data_cleaned)

@@ -23,6 +23,7 @@ def plot_maps():
         end_date=f"{end_date_}",
         end_time=f"{end_time_}",
         bounding_box=(-45, -45, 45, 45),
+        plot_type="local"
     )
 
 

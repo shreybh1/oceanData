@@ -37,7 +37,8 @@ def plot_sst_coordinates(ds):
     plt.title("Sea surface temperature %s" % ds["time_coverage_start"])
 
     fig.tight_layout()
-    plt.savefig(f'Plots/Sea_surface_temperature_{ds["time_coverage_start"]}')
+    plt.savefig(f'Plots/Sea_surface_temperature_local_{ds["time_coverage_start"]}')
+    print(f'Plot saved under : ' + 'Plots/Sea_surface_temperature_local_{ds["time_coverage_start"]}')
     # plt.show()
 
 
@@ -87,3 +88,4 @@ def plot_sst_global(ds):
     # Show the plot
     # plt.show()
     plt.savefig(f'Plots/Sea_surface_temperature_global_map_{ds["time_coverage_start"]}')
+    print(f'Plot saved under : ' + 'Plots/Sea_surface_temperature_global_map_{ds["time_coverage_start"]}')
