@@ -5,6 +5,7 @@ The py files are in [oceanData](oceanData) folder.
 The repository uses a [scheduler](scheduler.py) to obtain the plots for specified intervals. 
 
 ## Create a new environment package for earthaccess
+### Conda installation
 The scripts need conda environments to run the packages.
 ```
 # Earth access module for the NASA earth access package  
@@ -33,6 +34,13 @@ run the scripts using the following command.
 conda env create -f env.yml 
 ```
 
+### Pip installation
+Pip can also be used to setup the environment for this module using the [setup file](setup.py). 
+
+```
+pip install . 
+```
+
 ## Create access file providing your credentials to use earth access 
 Access token can be created using earthdata website using this [link](https://www.earthdata.nasa.gov/learn/use-data).  
 ```
@@ -59,4 +67,10 @@ python3 scheduler.py
 A test flag can be added which calls the [sst](sst.py) once, to verify if the plot function is working as expected. 
 ```
 python3 scheduler.py test 
+```
+
+### offline global maps 
+For offline map generation, a [script](cartopydata.sh) can be called which will download and unzip the cartopy files for the minimum downloading requirements. 
+```
+sudo bash cartopydata.sh 
 ```
