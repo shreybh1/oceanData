@@ -157,8 +157,8 @@ def download_data(result):
 
     # download data to local folder
     # files = earthaccess.download(result, "local_folder")
-    output = f"{os.getcwd()}/local_folder"
-    
+    #output = f"{os.getcwd()}/local_folder"
+    #
     # get authorisation details from .netrc file 
     import netrc
     secrets = netrc.netrc()
@@ -171,20 +171,23 @@ def download_data(result):
         url = str_result.split("Data: ")[1][2:-2]
 
         # get filename from url 
+        output = f"{os.getcwd()}/local_folder" 
         filename = f"{output}/{url.split('/')[-1]}" 
+        print('Filename = '+ filename) 
         
         if(os.path.isfile(filename)!=True):
             print("Saving under ", filename)
             # res=requests.get(url , auth=HTTPBasicAuth(username, password))
             # open(filename, 'wb').write(res.content)
             # call wget on bash using python 
-            os.system("wget " + "-P data/" + " --user=" + username + " --password=" + password + " "+ url )
-
+            os.system("wget " + "-P {output}/" + " --user=" + username + " --password=" + password + " "+ url )
+            # download data to local folder
         # test for file
         assert os.path.isfile(filename) == True
         # open file using xarray
         stream = xr.open_dataset(filename)
         # test for stream
         assert stream != None
+
 
     return(stream) 
